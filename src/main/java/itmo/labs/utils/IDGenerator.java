@@ -21,7 +21,6 @@ public class IDGenerator {
         return String.format("PID%07d", personId++);
     }
 
-    // Потом подтягиваем id из xml
     public static void updateTicketId(long id) {
         if (id >= ticketId) {
             ticketId = id + 1;
