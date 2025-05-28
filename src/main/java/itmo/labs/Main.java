@@ -14,7 +14,6 @@ import itmo.labs.utils.FileManager;
 
 public class Main {
     public static void main(String[] args) {
-        // Напиши в консоли: export FILE_PATH=tickets.xml
         String filepath = System.getenv("FILE_PATH");
 
         if (filepath == null) {

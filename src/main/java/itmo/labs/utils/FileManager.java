@@ -66,7 +66,7 @@ public class FileManager {
 
     public LinkedHashSet<Ticket> load() {
         try {
-            File file = new File(filepath); // файл по указанному пути
+            File file = new File(filepath); 
 
             // Чтение XML и преобразование его в TicketsWrapper (вспомогательный класс с List<Ticket>)
             TicketsWrapper wrapper = xmlMapper.readValue(file, TicketsWrapper.class);
