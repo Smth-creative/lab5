@@ -57,17 +57,11 @@ public class FileManager {
         public TicketsWrapper() {
         } // Нужен для Jackson
 
-        public TicketsWrapper(List<Ticket> tickets) {
-            this.tickets = tickets;
-        }
 
         public List<Ticket> getTickets() {
             return tickets;
         }
 
-        public void setTickets(List<Ticket> tickets) {
-            this.tickets = tickets;
-        }
     }
 
     public LinkedHashSet<Ticket> load() {
@@ -77,33 +71,30 @@ public class FileManager {
             // Чтение XML и преобразование его в TicketsWrapper (вспомогательный класс с List<Ticket>)
             TicketsWrapper wrapper = xmlMapper.readValue(file, TicketsWrapper.class);
 
+            // Если пустой файл возвращаем пустой список
+            if (wrapper.getTickets() == null) {
+                return new LinkedHashSet<>();
+            }
+
             // Так как Jackson при чтении <person /> автоматически создаёт объект со всеми null полями, надо вручную менять таких person
-            // Проверяем на null, если пустой файл
-            if (wrapper.getTickets() != null) {
-                for (Ticket t : wrapper.getTickets()) {
-                    if (t.getPerson() != null &&
-                            t.getPerson().getPassportID() == null &&
-                            t.getPerson().getEyeColor() == null &&
-                            t.getPerson().getNationality() == null) {
-                        t.setPerson(null);
-                    }
+            for (Ticket t : wrapper.getTickets()) {
+                if (t.getPerson() != null &&
+                        t.getPerson().getPassportID() == null &&
+                        t.getPerson().getEyeColor() == null &&
+                        t.getPerson().getNationality() == null) {
+                    t.setPerson(null);
                 }
             }
 
             // Получаем список Ticket из обёртки
             List<Ticket> list = wrapper.getTickets();
 
-            // Проверяем на null, если пустой файл
-            if (list != null) {
-                return new LinkedHashSet<>(list);
-            } else {
-                return new LinkedHashSet<>();
-            }
+            return new LinkedHashSet<>(list);
 
         } catch (IOException e) {
             System.err.println("Error while loading XML-file");
             System.exit(1);
-            return new LinkedHashSet<>();
+            return null;
         }
     }
 }
